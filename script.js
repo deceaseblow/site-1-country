@@ -23,6 +23,40 @@ function filterExcludedCountry(countries) {
     return countries.filter(country => country.name !== EXCLUDED_COUNTRY);
 }
 
+
+    // Add this to your existing script.js
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const hamburgerTop = document.getElementById('hamburger-top');
+        const hamburgerMiddle = document.getElementById('hamburger-middle');
+        const hamburgerBottom = document.getElementById('hamburger-bottom');
+
+        hamburger.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+            
+            // Animate hamburger to X
+            hamburgerTop.classList.toggle('rotate-45');
+            hamburgerTop.classList.toggle('translate-y-2');
+            hamburgerBottom.classList.toggle('-rotate-45');
+            hamburgerBottom.classList.toggle('-translate-y-2');
+            hamburgerMiddle.classList.toggle('opacity-0');
+        });
+
+        // Close mobile menu when a region link is clicked
+        const mobileRegionLinks = document.querySelectorAll('#mobile-menu .region-link');
+        mobileRegionLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+                
+                // Reset hamburger
+                hamburgerTop.classList.remove('rotate-45', 'translate-y-2');
+                hamburgerBottom.classList.remove('-rotate-45', '-translate-y-2');
+                hamburgerMiddle.classList.remove('opacity-0');
+            });
+        });
+
 // Check if URL contains a country code
 function checkForCountryInURL() {
     const path = window.location.pathname;
@@ -130,20 +164,45 @@ function displayRandomCountry() {
     randomCountryContainer.innerHTML = '';
     
     const countryCard = document.createElement('div');
-    countryCard.className = 'bg-white rounded-lg overflow-hidden w-80 shadow-lg transform hover:scale-105 transition duration-300 cursor-pointer';
+    countryCard.className = 'w-full max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition duration-300 cursor-pointer';
     countryCard.dataset.alpha3Code = randomCountry.alpha3Code || '';
     
     countryCard.innerHTML = `
-        <div class="h-64 flex items-center overflow-hidden">
-            <img src="${randomCountry.flags.png}" alt="${randomCountry.name} flag" class="w-full h-full object-cover">
-        </div>
-        <div class="p-4">
-            <p class="text-xs font-semibold text-purple-600 mb-1 uppercase">Featured Country</p>
-            <h3 class="text-xl font-bold m-0 mb-1">${randomCountry.name}</h3>
-            <p class="italic text-gray-600 mb-2">${randomCountry.capital || 'No Capital'}</p>
-            <div class="flex justify-between mt-3 text-sm">
-                <p>Population: ${randomCountry.population.toLocaleString()}</p>
-                <p>${randomCountry.area ? randomCountry.area.toLocaleString() + ' km²' : 'Area Unknown'}</p>
+        <div class="flex w-full h-[500px]">
+            <div class="w-1/2 relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-70"></div>
+                <img src="${randomCountry.flags.png}" alt="${randomCountry.name} flag" 
+                     class="absolute inset-0 w-full h-full object-cover mix-blend-multiply">
+            </div>
+            <div class="w-1/2 p-12 flex flex-col justify-center">
+                <h2 class="text-5xl font-bold text-gray-900 mb-4">${randomCountry.name}</h2>
+                <p class="text-purple-600 text-xl mb-6 tracking-wider font-semibold">${randomCountry.region || 'Unknown Region'}</p>
+                
+                <div class="space-y-4 text-gray-700">
+                    <div class="flex items-center">
+                        <i class="fas fa-globe text-purple-600 mr-4 text-2xl"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Capital</p>
+                            <p class="text-xl font-semibold">${randomCountry.capital || 'No Capital'}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <i class="fas fa-chart-area text-purple-600 mr-4 text-2xl"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Area</p>
+                            <p class="text-xl font-semibold">${randomCountry.area ? randomCountry.area.toLocaleString() + ' km²' : 'Unknown'}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <i class="fas fa-users text-purple-600 mr-4 text-2xl"></i>
+                        <div>
+                            <p class="text-sm text-gray-500">Population</p>
+                            <p class="text-xl font-semibold">${randomCountry.population.toLocaleString()}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `;
